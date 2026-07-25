@@ -21,7 +21,7 @@ public class CorsConfig {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-				.allowedOrigins("http://earth-basket-frontend.vercel.app")
+				.allowedOrigins("https://earth-basket-frontend.vercel.app")
 				.allowedMethods("*")
 				.allowCredentials(true);
 			}
@@ -32,7 +32,7 @@ public class CorsConfig {
 	public CorsConfigurationSource corsConfigurationSource()
 	{
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://earth-basket-frontend.vercel.app"));
+		configuration.setAllowedOrigins(List.of("https://earth-basket-frontend.vercel.app"));
 		configuration.setAllowedMethods(List.of("*"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
