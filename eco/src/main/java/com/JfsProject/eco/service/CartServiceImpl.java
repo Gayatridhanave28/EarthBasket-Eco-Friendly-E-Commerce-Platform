@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.JfsProject.eco.dto.Cartdto;
+import com.JfsProject.eco.exception.ResourceNotFoundException;
 import com.JfsProject.eco.model.Cart;
 import com.JfsProject.eco.model.Product;
 import com.JfsProject.eco.model.User;
@@ -25,19 +27,30 @@ public class CartServiceImpl implements CartService{
 	 @Autowired
 	    private ProductRepository productRepository;
 	
-	@Override
-	public Cart addToCart(Cart cart) {
-		User user = userRepository.findById(cart.getUser().getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+	 @Override
+		public Cart addToCart(Cartdto dto) {
+			User user = userRepository.findById(dto.getUserId())
+	                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Product product = productRepository.findById(cart.getProduct().getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+	        Product product = productRepository.findById(dto.getProductId())
+	                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        cart.setUser(user);
-        cart.setProduct(product);
+	        Cart existing = cartRepository.findByUserAndProduct(user, product).orElse(null);
 
-        return cartRepository.save(cart);
-	}
+	        if (existing != null) {
+	            int addQty = dto.getQuantity() != null ? dto.getQuantity() : 1;
+	            existing.setQuantity(existing.getQuantity() + addQty);
+	            return cartRepository.save(existing);
+	        }
+
+	        Cart cart = new Cart();
+	        cart.setUser(user);
+	        cart.setProduct(product);
+	        cart.setQuantity(dto.getQuantity() != null ? dto.getQuantity() : 1);
+
+	        return cartRepository.save(cart);
+		}
+
 
 	@Override
 	public List<Cart> getCartByUser(Long userId) {

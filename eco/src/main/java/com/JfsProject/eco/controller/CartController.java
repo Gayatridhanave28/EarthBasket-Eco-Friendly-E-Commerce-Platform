@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.JfsProject.eco.dto.Cartdto;
 import com.JfsProject.eco.model.Cart;
 import com.JfsProject.eco.service.CartService;
 
@@ -22,12 +23,10 @@ public class CartController {
 	 @Autowired
 	    private CartService cartService;
 
-	    @PostMapping("/add")
-	    public Cart addToCart(@RequestBody Cart cart) {
-
-	        return cartService.addToCart(cart);
-
-	    }
+	 @PostMapping("/add")
+	 public Cart addToCart(@RequestBody Cartdto dto) {
+	     return cartService.addToCart(dto);
+	 }
 
 	    @GetMapping("/{userId}")
 	    public List<Cart> getCart(@PathVariable Long userId) {
