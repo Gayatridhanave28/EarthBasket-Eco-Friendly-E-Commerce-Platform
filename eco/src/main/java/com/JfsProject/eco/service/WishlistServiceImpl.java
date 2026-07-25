@@ -22,25 +22,19 @@ public class WishlistServiceImpl implements WishlistService{
 
 	    @Autowired
 	    private ProductRepository productRepository;
-	@Override
-	public Wishlist addToWishlist(Wishlist wishlist) {
-		User user = userRepository.findById(
-                wishlist.getUser().getUserId())
-                .orElseThrow(() -> new RuntimeException("User Not Found"));
-
-        Product product = productRepository.findById(
-                wishlist.getProduct().getProductId())
-                .orElseThrow(() -> new RuntimeException("Product Not Found"));
-
-        if (wishlistRepository.findByUserAndProduct(user, product).isPresent()) {
-            throw new RuntimeException("Product already exists in wishlist");
-        }
-
-        wishlist.setUser(user);
-        wishlist.setProduct(product);
-
-        return wishlistRepository.save(wishlist);
-	}
+	    public Wishlist addToWishlist(Long userId, Long productId) {
+			User user = userRepository.findById(userId)
+	                .orElseThrow(() -> new RuntimeException("User Not Found"));
+	        Product product = productRepository.findById(productId)
+	                .orElseThrow(() -> new RuntimeException("Product Not Found"));
+	        if (wishlistRepository.findByUserAndProduct(user, product).isPresent()) {
+	            throw new RuntimeException("Product already exists in wishlist");
+	        }
+	        Wishlist wishlist = new Wishlist();
+	        wishlist.setUser(user);
+	        wishlist.setProduct(product);
+	        return wishlistRepository.save(wishlist);
+		}
 
 	@Override
 	public List<Wishlist> getWishlistByUser(Long userId) {

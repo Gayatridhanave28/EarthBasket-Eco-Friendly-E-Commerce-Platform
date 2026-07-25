@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.JfsProject.eco.dto.Wishlistdto;
 import com.JfsProject.eco.model.Wishlist;
 import com.JfsProject.eco.service.WishlistService;
 
@@ -21,12 +22,10 @@ public class WishlistController {
 	@Autowired
     private WishlistService wishlistService;
 
-    @PostMapping("/add")
-    public Wishlist addToWishlist(@RequestBody Wishlist wishlist) {
-
-        return wishlistService.addToWishlist(wishlist);
-
-    }
+	 @PostMapping("/add")
+	    public Wishlist addToWishlist(@RequestBody Wishlistdto dto) {
+	        return wishlistService.addToWishlist(dto.getUserId(), dto.getProductId());
+	    }
 
     @GetMapping("/{userId}")
     public List<Wishlist> getWishlist(@PathVariable Long userId) {
