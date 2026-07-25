@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.JfsProject.eco.dto.Reviewdto;
+import com.JfsProject.eco.exception.ResourceNotFoundException;
 import com.JfsProject.eco.model.Product;
 import com.JfsProject.eco.model.Review;
 import com.JfsProject.eco.model.User;
@@ -23,16 +25,18 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private UserRepository userRepository;
 
-	@Override
-	public Review addReview(Review review) {
-		 User user = userRepository.findById(review.getUser().getUserId())
-	                .orElseThrow(() -> new RuntimeException("User not found"));
+    @Override
+	public Review addReview(Reviewdto dto) {
+		 User user = userRepository.findById(dto.getUserId())
+	                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+	        Product product = productRepository.findById(dto.getProductId())
+	                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-	        Product product = productRepository.findById(review.getProduct().getProductId())
-	                .orElseThrow(() -> new RuntimeException("Product not found"));
-
+	        Review review = new Review();
 	        review.setUser(user);
 	        review.setProduct(product);
+	        review.setRating(dto.getRating());
+	        review.setComment(dto.getComment());
 
 	        return reviewRepository.save(review);
 	}
